@@ -160,10 +160,7 @@ namespace Stego.Services
         private static RSA ReadPrivateKey(string path)
         {
 
-            var lines = File.ReadLines(path);
-
-            if (lines.First() != "-----BEGIN RSA PRIVATE KEY-----"
-                || lines.Last() != "-----END RSA PRIVATE KEY-----")
+            if (!IsPrivateKeyValid(path))
                 throw new FileFormatException("File is not valid pem file or does not contain rsa private key");
 
             using (StreamReader streamReader = new StreamReader(path))
@@ -194,6 +191,9 @@ namespace Stego.Services
 
         public static RSA ReadPublicKey(string path)
         {
+            if (!IsPublicKeyValid(path))
+                throw new FileFormatException("File is not valid pem file or does not contain rsa public key");
+
             using StreamReader reader = new StreamReader(path);
             PemReader pem = new PemReader(reader);
             RsaKeyParameters par = (RsaKeyParameters)pem.ReadObject();
@@ -203,6 +203,18 @@ namespace Stego.Services
             rsaParam.Exponent = par.Exponent.ToByteArrayUnsigned();
             rsa.ImportParameters(rsaParam);
             return rsa;
+        }
+
+        public static bool IsPublicKeyValid(string path)
+        {
+            using StreamReader reader = new StreamReader(path);
+            return reader.ReadLine() == "-----BEGIN PUBLIC KEY-----";
+        }
+
+        public static bool IsPrivateKeyValid(string path)
+        {
+            using StreamReader reader = new StreamReader(path);
+            return reader.ReadLine() == "-----BEGIN RSA PRIVATE KEY-----";
         }
     }
 }
