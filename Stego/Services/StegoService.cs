@@ -102,19 +102,11 @@ namespace Stego.Services
         // Encodes first four nibbles
         static Color EmbedNibble(int nibble, Color pixel)
         {
-
-            int alpha = 0;
-            int red = 0;
-            int green = 0;
-            int blue = 0;
-
-            alpha = (pixel.A & ~1) | ((nibble & 0x08) >> 3);
-            red = (pixel.R & ~1) | ((nibble & 0x04) >> 2);
-            green = (pixel.G & ~1) | ((nibble & 0x02) >> 1);
-            blue = (pixel.B & ~1) | nibble & 0x01;
-
+            int alpha = pixel.A & ~1 | (nibble & 0x08) >> 3;
+            int red = pixel.R & ~1 | (nibble & 0x04) >> 2;
+            int green = pixel.G & ~1 | (nibble & 0x02) >> 1;
+            int blue = pixel.B & ~1 | nibble & 0x01;
             return Color.FromArgb(alpha, red, green, blue);
-
         }
 
         public static bool ValidImageFormat(string path)
