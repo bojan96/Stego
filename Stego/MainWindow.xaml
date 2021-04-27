@@ -9,7 +9,7 @@
         Width="500" 
         ResizeMode="NoResize">
 
-    <TabControl>
+    <TabControl Padding="10">
         <TabItem Header="Šifrovanje poruke">
             <Grid>
                 <Grid.ColumnDefinitions>
