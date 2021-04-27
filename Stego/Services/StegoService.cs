@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Stego.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -13,7 +14,7 @@ namespace Stego.Services
         {
 
             if (!ValidImageFormat(srcFilename))
-                throw new FileFormatException("Format slike nije podrzan");
+                throw new FileFormatException("Invalid image format");
 
             Bitmap srcBmp;
 
@@ -138,7 +139,7 @@ namespace Stego.Services
             }
             catch
             {
-                throw new IOException($"Nije moguce otvoriti sliku: {path}");
+                throw new IOException($"Unable to open image: {path}");
             }
 
         }
@@ -147,20 +148,20 @@ namespace Stego.Services
         {
 
             if (!ValidImageFormat(filename))
-                throw new FileFormatException("Format slike nije podrzan");
+                throw new FileFormatException("Invalid image format");
 
             using (var srcBmp = new Bitmap(filename))
             {
 
                 //Minimum 4 bytes ( 8 nibbles or 8 pixels)
                 if (srcBmp.Width * srcBmp.Height < sizeof(int) * 2)
-                    throw new FileFormatException
-                        ("Greska prilikom dekodovanja slike");
+                    throw new StegoExtractException
+                        ("No enough data to extract");
 
                 int length = ExtractLength(srcBmp);
 
                 if (length <= 0 || ((length * 2) > (srcBmp.Width * srcBmp.Height - 8)))
-                    throw new FileFormatException("Greska prilikom dekodovanja slike");
+                    throw new StegoExtractException("Invalid data length");
 
                 // Offset is 8 because we already processed 8 pixels
                 var data = ExtractData(srcBmp, length, sizeof(int) * 2);
