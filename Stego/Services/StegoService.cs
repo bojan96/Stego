@@ -152,7 +152,7 @@ namespace Stego.Services
 
                 int length = ExtractLength(srcBmp);
 
-                if (length <= 0 || ((length * 2) > (srcBmp.Width * srcBmp.Height - 8)))
+                if (length <= 0 || ((length * 2) > (srcBmp.Width * srcBmp.Height - sizeof(int) * 2)))
                     throw new StegoExtractException("Invalid data length");
 
                 // Offset is 8 because we already processed 8 pixels
