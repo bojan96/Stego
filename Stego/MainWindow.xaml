@@ -10,7 +10,7 @@
         ResizeMode="NoResize">
 
     <TabControl>
-        <TabItem Header="Sifrovanje poruke">
+        <TabItem Header="Šifrovanje poruke">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -26,11 +26,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0">Vas privatni kljuc:</Label>
+                <Label Grid.Row="0" Grid.Column="0">Vaš privatni ključ:</Label>
                 <TextBox x:Name="privKeySendTextBox" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1"/>
                 <Button Padding="5,0" Click="OnPrivateKeySelect" Grid.Row="0" Grid.Column="3">Izaberi...</Button>
 
-                <Label Grid.Row="1" Grid.Column="0">Javni kljuc primaoca:</Label>
+                <Label Grid.Row="1" Grid.Column="0">Javni ključ primaoca:</Label>
                 <TextBox x:Name="pubKeySendTextBox" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1"/>
                 <Button Padding="5,0" Click="OnPublicKeySelect" Grid.Row="1" Grid.Column="3">Izaberi...</Button>
 
@@ -46,7 +46,7 @@
                 <Button Margin="0,0,5,5" Padding="3" Click="OnCreateMessage"  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">Kreiraj stego sliku</Button>
             </Grid>
         </TabItem>
-        <TabItem Header="Desifrovanje poruke">
+        <TabItem Header="Dešifrovanje poruke">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -63,11 +63,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0">Vas privatni kljuc:</Label>
+                <Label Grid.Row="0" Grid.Column="0">Vaš privatni ključ:</Label>
                 <TextBox x:Name="privKeyRecTextBox" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1"/>
                 <Button Padding="5,0" Click="OnPrivateKeyRecSelect" Grid.Row="0" Grid.Column="3">Izaberi...</Button>
 
-                <Label Grid.Row="1" Grid.Column="0">Javni kljuc posiljaoca:</Label>
+                <Label Grid.Row="1" Grid.Column="0">Javni ključ pošiljaoca:</Label>
                 <TextBox x:Name="pubKeyRecTextBox"  VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1"/>
                 <Button Padding="5,0" Click="OnPublicKeyRecSelect" Grid.Row="1" Grid.Column="3">Izaberi...</Button>
 
@@ -81,7 +81,7 @@
                     <TextBlock x:Name="msgBox"/>
                 </ScrollViewer>
                 <Separator Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"/>
-                <Button Margin="0,0,5,5" Padding="3" Click="OnDecryptMessage" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">Desifruj poruku</Button>
+                <Button Margin="0,0,5,5" Padding="3" Click="OnDecryptMessage" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">Dešifruj poruku</Button>
             </Grid>
         </TabItem>
     </TabControl>
