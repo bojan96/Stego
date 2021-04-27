@@ -27,7 +27,7 @@ namespace Stego.Services
 
             byte[] symmKey = GenerateSymmetricKey();
             byte[] iv = GenerateIV();
-            byte[] envelope = CryptoService.EncryptSymmetricData(symmKey, iv, publicKey);
+            byte[] envelope = EncryptSymmetricData(symmKey, iv, publicKey);
 
             byte[] msgBytes = Encoding.UTF8.GetBytes(message);
             byte[] signature = SignData(msgBytes, privateKey);
