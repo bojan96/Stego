@@ -51,7 +51,7 @@ namespace Stego.Services
             bool result = VerifyData(msgBytes, signature, pubKey);
 
             if (!result)
-                throw new SignatureException("Verifikacija potpisa neuspjesna");
+                throw new SignatureException("Signature verification failed");
 
             return Encoding.UTF8.GetString(msgBytes);
         }
