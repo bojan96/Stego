@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,8 @@ namespace Stego
         {
 
             var dstArray = new byte[sizeof(int) + array1.Length + array2.Length];
-            BitConverter.GetBytes(array1.Length).CopyTo(dstArray, 0);
+            Span<byte> lengthSpan = new Span<byte>(dstArray, 0, 4);
+            BinaryPrimitives.WriteInt32BigEndian(lengthSpan, array1.Length);
             array1.CopyTo(dstArray, sizeof(int));
             array2.CopyTo(dstArray, sizeof(int) + array1.Length);
 
@@ -20,8 +22,9 @@ namespace Stego
 
         public static (byte[], byte[]) SplitArray(byte[] array)
         {
+            Span<byte> lengthSpan = new Span<byte>(array, 0, 4);
 
-            int array1Len = BitConverter.ToInt32(array.Take(sizeof(int)).ToArray(), 0);
+            int array1Len = BinaryPrimitives.ReadInt32BigEndian(lengthSpan);
             int array2Len = array.Length - sizeof(int) - array1Len;
             var array1 = new byte[array1Len];
             var array2 = new byte[array2Len];
