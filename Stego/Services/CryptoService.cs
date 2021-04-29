@@ -39,7 +39,7 @@ namespace Stego.Services
             return Utility.CombineByteArrays(envelope, encData);
         }
 
-        public static string DecryptMessage(string privateKeyPath, string publicKeyPath, byte[] payload)
+        public static (string, bool) DecryptMessage(string privateKeyPath, string publicKeyPath, byte[] payload)
         {
             using RSA privKey = ReadPrivateKey(privateKeyPath);
             using RSA pubKey = ReadPublicKey(publicKeyPath);
@@ -52,10 +52,7 @@ namespace Stego.Services
 
             bool result = VerifyData(msgBytes, signature, pubKey);
 
-            if (!result)
-                throw new SignatureException("Signature verification failed");
-
-            return Encoding.UTF8.GetString(msgBytes);
+            return (Encoding.UTF8.GetString(msgBytes), result);
         }
 
         private static byte[] GenerateRandomBytes(int size)
