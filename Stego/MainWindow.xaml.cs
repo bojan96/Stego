@@ -130,5 +130,35 @@ namespace Stego
             dialog.Filter = "PEM|*.pem";
             return dialog;    
         }
+
+
+        private SaveFileDialog GetPemSaveFileDialog(string title)
+        {
+            SaveFileDialog dialog = new SaveFileDialog
+            {
+                Title = title,
+                Filter = "PEM|*.pem"
+            };
+            return dialog;
+        }
+
+        private void OnGenerateKeyPair(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog privKeyDialog = GetPemSaveFileDialog("Izaberite putanju za privatni ključ");
+            SaveFileDialog pubKeyDialog = GetPemSaveFileDialog("Izaberite putanju za javni ključ");
+            
+            bool result = privKeyDialog.ShowDialog().GetValueOrDefault(false);
+
+            if (!result)
+                return;
+
+            result = pubKeyDialog.ShowDialog().GetValueOrDefault(false);
+
+            if (!result)
+                return;
+
+            CryptoService.GenerateRsaKeyPair(privKeyDialog.FileName, pubKeyDialog.FileName);
+            MessageBox.Show("Par ključeva uspješno generisan");
+        }
     }
 }

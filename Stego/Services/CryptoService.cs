@@ -1,6 +1,8 @@
 ﻿using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Security;
 using System;
 using System.IO;
 using System.Linq;
@@ -13,9 +15,11 @@ namespace Stego.Services
     {
         const int SYMM_KEY_SIZE = 16; // in bytes
         const int IV_SIZE = 16;
+        const int RSA_KEY_SIZE = 2048;
         static readonly HashAlgorithmName HASH_ALGORITHM = HashAlgorithmName.SHA256;
         static readonly RSASignaturePadding RSA_SIGNATURE_PADDING = RSASignaturePadding.Pkcs1;
         static readonly RSAEncryptionPadding RSA_ENCRYPTION_PADDING = RSAEncryptionPadding.OaepSHA1;
+        private static readonly SecureRandom rng = new SecureRandom();
 
 
         public static byte[] EncryptMessage(string privateKeyPath, string publicKeyPath, string message)
@@ -215,6 +219,19 @@ namespace Stego.Services
         {
             using StreamReader reader = new StreamReader(path);
             return reader.ReadLine() == "-----BEGIN RSA PRIVATE KEY-----";
+        }
+
+        public static void GenerateRsaKeyPair(string privKeyPath, string pubKeyPath)
+        {
+            RsaKeyPairGenerator generator = new RsaKeyPairGenerator();
+            generator.Init(new KeyGenerationParameters(rng, RSA_KEY_SIZE));
+            AsymmetricCipherKeyPair keyPair = generator.GenerateKeyPair();
+            using StreamWriter privKeyWriter = new StreamWriter(privKeyPath);
+            using StreamWriter pubKeyWriter = new StreamWriter(pubKeyPath);
+            PemWriter privKeyPem = new PemWriter(privKeyWriter);
+            PemWriter pubKeyPem = new PemWriter(pubKeyWriter);
+            privKeyPem.WriteObject(keyPair.Private);
+            pubKeyPem.WriteObject(keyPair.Public);
         }
     }
 }
