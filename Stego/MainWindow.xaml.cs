@@ -2,8 +2,10 @@
 using Stego.Services;
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Stego
 {
@@ -19,19 +21,19 @@ namespace Stego
             dialog.Filter = "PNG|*.png";
             bool? result = dialog.ShowDialog();
 
-            if(result.GetValueOrDefault(false))
+            if (result.GetValueOrDefault(false))
             {
                 try
-                { 
-                    byte[] payload = CryptoService.EncryptMessage(privKeySendTextBox.Text, pubKeySendTextBox.Text, msgTextBox.Text);
+                {
+                    byte[] payload = CryptoService.EncryptMessage(privKeySendTextBox.Text, pubKeyRecTextBox.Text, msgTextBox.Text);
                     StegoService.Embed(imageSendTextBox.Text, dialog.FileName, payload);
                     MessageBox.Show("Stego slika uspjesno generisana", "Operacija uspjesna");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     string message = ex.Message;
 
-                    message = ex is FileNotFoundException fn ? $"Fajl {Path.GetFileName(fn.FileName)} ne postoji" : message; 
+                    message = ex is FileNotFoundException fn ? $"Fajl {Path.GetFileName(fn.FileName)} ne postoji" : message;
                     MessageBox.Show(message, "Greska", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -43,14 +45,14 @@ namespace Stego
             try
             {
                 byte[] payload = StegoService.Extract(stegoImgTextBox.Text);
-                msgBox.Text = CryptoService.DecryptMessage(privKeyRecTextBox.Text, pubKeyRecTextBox.Text, payload);
+                msgBox.Text = CryptoService.DecryptMessage(privKeyRecTextBox.Text, pubKeySendTextBox.Text, payload);
                 MessageBox.Show("Stego slika uspjesno dekodovana", "Operacija uspjesna");
             }
-            catch(CryptographicException ex)
+            catch (CryptographicException ex)
             {
                 MessageBox.Show("Greska prilikom dekriptovanja", "Greska", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string message = ex.Message;
                 message = ex is FileNotFoundException fn ? $"Fajl {Path.GetFileName(fn.FileName)} ne postoji" : message;
@@ -58,28 +60,28 @@ namespace Stego
             }
         }
 
-        private void OnPrivateKeySelect(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog dialog = GetPemFileDialog();
-            bool? result = dialog.ShowDialog();
-
-            if(result.GetValueOrDefault(false))
-            {
-                privKeySendTextBox.Text = dialog.FileName;
-            }
-        }
-        private void OnPublicKeySelect(object sender, RoutedEventArgs e)
+        private void OnSenderPrivKeyClicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = GetPemFileDialog();
             bool? result = dialog.ShowDialog();
 
             if (result.GetValueOrDefault(false))
             {
-                pubKeySendTextBox.Text = dialog.FileName;
+                privKeySendTextBox.Text = dialog.FileName;
+            }
+        }
+        private void OnReceiverPubKeyClicked(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = GetPemFileDialog();
+            bool? result = dialog.ShowDialog();
+
+            if (result.GetValueOrDefault(false))
+            {
+                pubKeyRecTextBox.Text = dialog.FileName;
             }
         }
 
-        private void OnImageSelect(object sender, RoutedEventArgs e)
+        private void OnSrcImgBttnClicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "PNG|*.png|JPEG|*.jpg;*.jpeg";
@@ -91,7 +93,7 @@ namespace Stego
             }
         }
 
-        private void OnPrivateKeyRecSelect(object sender, RoutedEventArgs e)
+        private void OnReceieverPrivKeyClicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = GetPemFileDialog();
             bool? result = dialog.ShowDialog();
@@ -101,18 +103,18 @@ namespace Stego
                 privKeyRecTextBox.Text = dialog.FileName;
             }
         }
-        private void OnPublicKeyRecSelect(object sender, RoutedEventArgs e)
+        private void OnSenderPubKeyClicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = GetPemFileDialog();
             bool? result = dialog.ShowDialog();
 
             if (result.GetValueOrDefault(false))
             {
-                pubKeyRecTextBox.Text = dialog.FileName;
+                pubKeySendTextBox.Text = dialog.FileName;
             }
         }
 
-        private void OnImageRecSelect(object sender, RoutedEventArgs e)
+        private void OnStegoImgBttnClicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "PNG|*.png";
@@ -128,7 +130,7 @@ namespace Stego
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "PEM|*.pem";
-            return dialog;    
+            return dialog;
         }
 
 
@@ -146,7 +148,7 @@ namespace Stego
         {
             SaveFileDialog privKeyDialog = GetPemSaveFileDialog("Izaberite putanju za privatni ključ");
             SaveFileDialog pubKeyDialog = GetPemSaveFileDialog("Izaberite putanju za javni ključ");
-            
+
             bool result = privKeyDialog.ShowDialog().GetValueOrDefault(false);
 
             if (!result)
@@ -160,5 +162,46 @@ namespace Stego
             CryptoService.GenerateRsaKeyPair(privKeyDialog.FileName, pubKeyDialog.FileName);
             MessageBox.Show("Par ključeva uspješno generisan");
         }
+
+        private void OnSenderPrivKeyChanged(object sender, TextChangedEventArgs args)
+        {
+            ToggleStegoBttnEnabled();
+        }
+
+        private void OnReceiverPubKeyChanged(object sender, TextChangedEventArgs args)
+        {
+            ToggleStegoBttnEnabled();
+        }
+        private void OnSourceImageChanged(object sender, TextChangedEventArgs args)
+        {
+            ToggleStegoBttnEnabled();
+        }
+        private void OnMessageTextChanged(object sender, TextChangedEventArgs args)
+        {
+            ToggleStegoBttnEnabled();
+        }
+        private void OnReceiverPrivKeyChanged(object sender, TextChangedEventArgs args)
+        {
+            ToggleDecrypBttnEnabled();
+        }
+        private void OnSenderPubKeyChanged(object sender, TextChangedEventArgs args)
+        {
+            ToggleDecrypBttnEnabled();
+        }
+        private void OnStegoImgBttnEnabled(object sender, TextChangedEventArgs args)
+        {
+            ToggleDecrypBttnEnabled();
+        }
+        private void ToggleStegoBttnEnabled()
+            => stegoBttn.IsEnabled = File.Exists(privKeySendTextBox.Text) 
+                && File.Exists(pubKeyRecTextBox.Text) 
+                && File.Exists(imageSendTextBox.Text) 
+                && msgTextBox.Text.Length != 0;
+
+        private void ToggleDecrypBttnEnabled()
+            => decryptBttn.IsEnabled = File.Exists(privKeyRecTextBox.Text)
+                && File.Exists(pubKeySendTextBox.Text)
+                && File.Exists(stegoImgTextBox.Text);
+        
     }
 }

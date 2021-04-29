@@ -32,23 +32,23 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0">Vaš privatni ključ:</Label>
-                    <TextBox x:Name="privKeySendTextBox" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1"/>
-                    <Button Padding="5,0" Click="OnPrivateKeySelect" Grid.Row="0" Grid.Column="3">Izaberi...</Button>
+                    <TextBox x:Name="privKeySendTextBox" TextChanged="OnSenderPrivKeyChanged" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                    <Button Padding="5,0" Click="OnSenderPrivKeyClicked" Grid.Row="0" Grid.Column="3">Izaberi...</Button>
 
                     <Label Grid.Row="1" Grid.Column="0">Javni ključ primaoca:</Label>
-                    <TextBox x:Name="pubKeySendTextBox" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1"/>
-                    <Button Padding="5,0" Click="OnPublicKeySelect" Grid.Row="1" Grid.Column="3">Izaberi...</Button>
+                    <TextBox x:Name="pubKeyRecTextBox" TextChanged="OnReceiverPubKeyChanged" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+                    <Button Padding="5,0" Click="OnReceiverPubKeyClicked" Grid.Row="1" Grid.Column="3">Izaberi...</Button>
 
                     <Label Grid.Row="2" Grid.Column="0">Slika:</Label>
-                    <TextBox x:Name="imageSendTextBox"  VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="1"/>
-                    <Button Padding="5,0" Click="OnImageSelect" Grid.Row="2" Grid.Column="3">Izaberi...</Button>
+                    <TextBox x:Name="imageSendTextBox" TextChanged="OnSourceImageChanged" VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="1"/>
+                    <Button Padding="5,0" Click="OnSrcImgBttnClicked" Grid.Row="2" Grid.Column="3">Izaberi...</Button>
 
                     <Label Grid.Row="3" Grid.Column="0">Poruka:</Label>
-                    <TextBox Margin="0,5" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="msgTextBox" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" AcceptsReturn="True" AcceptsTab="True"/>
+                    <TextBox Margin="0,5" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="msgTextBox" TextChanged="OnMessageTextChanged" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" AcceptsReturn="True" AcceptsTab="True"/>
 
                     <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
                 
-                    <Button Margin="0,0,5,5" Padding="3" Click="OnCreateMessage"  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">Kreiraj stego sliku</Button>
+                    <Button IsEnabled="False" x:Name="stegoBttn" Margin="0,0,5,5" Padding="3" Click="OnCreateMessage" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">Kreiraj stego sliku</Button>
                 </Grid>
             </TabItem>
 
@@ -70,16 +70,16 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0">Vaš privatni ključ:</Label>
-                    <TextBox x:Name="privKeyRecTextBox" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1"/>
-                    <Button Padding="5,0" Click="OnPrivateKeyRecSelect" Grid.Row="0" Grid.Column="3">Izaberi...</Button>
+                    <TextBox x:Name="privKeyRecTextBox" TextChanged="OnReceiverPrivKeyChanged" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                    <Button Padding="5,0" Click="OnReceieverPrivKeyClicked" Grid.Row="0" Grid.Column="3">Izaberi...</Button>
 
                     <Label Grid.Row="1" Grid.Column="0">Javni ključ pošiljaoca:</Label>
-                    <TextBox x:Name="pubKeyRecTextBox"  VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1"/>
-                    <Button Padding="5,0" Click="OnPublicKeyRecSelect" Grid.Row="1" Grid.Column="3">Izaberi...</Button>
+                    <TextBox x:Name="pubKeySendTextBox" TextChanged="OnSenderPubKeyChanged"  VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+                    <Button Padding="5,0" Click="OnSenderPubKeyClicked" Grid.Row="1" Grid.Column="3">Izaberi...</Button>
 
                     <Label Grid.Row="2" Grid.Column="0">Stego slika:</Label>
-                    <TextBox x:Name="stegoImgTextBox" VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="1"/>
-                    <Button Padding="5,0" Click="OnImageRecSelect" Grid.Row="2" Grid.Column="3">Izaberi...</Button>
+                    <TextBox x:Name="stegoImgTextBox" TextChanged="OnStegoImgBttnEnabled" VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="1"/>
+                    <Button Padding="5,0" Click="OnStegoImgBttnClicked" Grid.Row="2" Grid.Column="3">Izaberi...</Button>
 
                     <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"/>
 
@@ -87,7 +87,7 @@
                         <TextBlock x:Name="msgBox"/>
                     </ScrollViewer>
                     <Separator Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"/>
-                    <Button Margin="0,0,5,5" Padding="3" Click="OnDecryptMessage" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">Dešifruj poruku</Button>
+                    <Button x:Name="decryptBttn" IsEnabled="False" Margin="0,0,5,5" Padding="3" Click="OnDecryptMessage" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">Dešifruj poruku</Button>
                 </Grid>
             </TabItem>
         </TabControl>
