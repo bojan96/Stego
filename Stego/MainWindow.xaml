@@ -10,7 +10,7 @@
         ResizeMode="NoResize">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem IsCheckable="False" Header="_Fajl">
+            <MenuItem Header="_Fajl">
                 <MenuItem Header="Generiši par ključeva" Click="OnGenerateKeyPair"/>
             </MenuItem>
         </Menu>
