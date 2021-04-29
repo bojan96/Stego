@@ -45,7 +45,15 @@ namespace Stego
             try
             {
                 byte[] payload = StegoService.Extract(stegoImgTextBox.Text);
-                msgBox.Text = CryptoService.DecryptMessage(privKeyRecTextBox.Text, pubKeySendTextBox.Text, payload);
+                bool isSignatureValid;
+                (msgBox.Text, isSignatureValid) = CryptoService.DecryptMessage(privKeyRecTextBox.Text, pubKeySendTextBox.Text, payload);
+
+                if(!isSignatureValid)
+                {
+                    MessageBox.Show("Neuspjesna verifikacija digitalnog potpisa", "Verifikacija potpisa neuspjesna");
+                    return;
+                }
+
                 MessageBox.Show("Stego slika uspjesno dekodovana", "Operacija uspjesna");
             }
             catch (CryptographicException ex)
