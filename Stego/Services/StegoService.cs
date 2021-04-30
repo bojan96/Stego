@@ -136,6 +136,29 @@ namespace Stego.Services
 
         }
 
+        public static bool IsValidSourceImageFormat(string path)
+            => IsValidImageFormat(path, ImageFormat.Png, ImageFormat.Jpeg, ImageFormat.Bmp);
+
+        public static bool IsValidStegoImageFormat(string path)
+            => IsValidImageFormat(path, ImageFormat.Png);
+        private static bool IsValidImageFormat(string path, params ImageFormat[] formats)
+        {
+            try
+            {
+
+                using var fileStream = new FileStream(path, FileMode.Open);
+                using var image = new Bitmap(fileStream);
+                var format = image.RawFormat;
+                return Array.Exists(formats, f => f.Equals(format));
+            }
+            catch
+            {
+                throw new IOException($"Unable to open image: {path}");
+            }
+        }
+
+
+
         public static byte[] Extract(string filename)
         {
 

@@ -56,7 +56,7 @@ namespace Stego
 
                 MessageBox.Show("Stego slika uspjesno dekodovana", "Operacija uspjesna");
             }
-            catch (CryptographicException ex)
+            catch (CryptographicException)
             {
                 MessageBox.Show("Greska prilikom dekriptovanja", "Greska", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -201,15 +201,17 @@ namespace Stego
             ToggleDecrypBttnEnabled();
         }
         private void ToggleStegoBttnEnabled()
-            => stegoBttn.IsEnabled = File.Exists(privKeySendTextBox.Text) 
-                && File.Exists(pubKeyRecTextBox.Text) 
-                && File.Exists(imageSendTextBox.Text) 
-                && msgTextBox.Text.Length != 0;
+            => stegoBttn.IsEnabled = msgTextBox.Text.Length != 0
+                && File.Exists(privKeySendTextBox.Text)
+                && File.Exists(pubKeyRecTextBox.Text)
+                && File.Exists(imageSendTextBox.Text)
+                && StegoService.IsValidSourceImageFormat(imageSendTextBox.Text);
 
         private void ToggleDecrypBttnEnabled()
             => decryptBttn.IsEnabled = File.Exists(privKeyRecTextBox.Text)
                 && File.Exists(pubKeySendTextBox.Text)
-                && File.Exists(stegoImgTextBox.Text);
+                && File.Exists(stegoImgTextBox.Text)
+                && StegoService.IsValidStegoImageFormat(stegoImgTextBox.Text);
         
     }
 }
