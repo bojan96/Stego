@@ -44,16 +44,16 @@ namespace Stego
 
             try
             {
+                msgBox.Text = "";
                 byte[] payload = StegoService.Extract(stegoImgTextBox.Text);
-                bool isSignatureValid;
-                (msgBox.Text, isSignatureValid) = CryptoService.DecryptMessage(privKeyRecTextBox.Text, pubKeySendTextBox.Text, payload);
+                (string msg, bool isSignatureValid) = CryptoService.DecryptMessage(privKeyRecTextBox.Text, pubKeySendTextBox.Text, payload);
 
                 if(!isSignatureValid)
                 {
                     MessageBox.Show("Neuspjesna verifikacija digitalnog potpisa", "Verifikacija potpisa neuspjesna");
                     return;
                 }
-
+                msgBox.Text = msg;
                 MessageBox.Show("Stego slika uspjesno dekodovana", "Operacija uspjesna");
             }
             catch (CryptographicException)
@@ -205,12 +205,16 @@ namespace Stego
                 && File.Exists(privKeySendTextBox.Text)
                 && File.Exists(pubKeyRecTextBox.Text)
                 && File.Exists(imageSendTextBox.Text)
+                && CryptoService.IsPrivateKeyValid(privKeySendTextBox.Text)
+                && CryptoService.IsPublicKeyValid(pubKeyRecTextBox.Text)
                 && StegoService.IsValidSourceImageFormat(imageSendTextBox.Text);
 
         private void ToggleDecrypBttnEnabled()
             => decryptBttn.IsEnabled = File.Exists(privKeyRecTextBox.Text)
                 && File.Exists(pubKeySendTextBox.Text)
                 && File.Exists(stegoImgTextBox.Text)
+                && CryptoService.IsPrivateKeyValid(privKeyRecTextBox.Text)
+                && CryptoService.IsPublicKeyValid(pubKeySendTextBox.Text)
                 && StegoService.IsValidStegoImageFormat(stegoImgTextBox.Text);
         
     }
